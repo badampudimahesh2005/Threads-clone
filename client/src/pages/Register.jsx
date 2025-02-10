@@ -26,7 +26,7 @@ const Register = () => {
              fontSize={'1.5rem'}
              fontWeight={'bold'}
              alignSelf={'center'}
-            >Login with email</Typography>
+            >Register with email</Typography>
             <TextField variant='outlined' label='Enter your name' />
             <TextField variant='outlined' label='Enter your email' type='email' />
             <TextField variant='outlined' label='Enter your password' type='password' />
