@@ -1,14 +1,16 @@
 import Post from "../../../components/home/Post";
-import { Stack } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 
 const Threads = () => {
+
+  const _700 = useMediaQuery("(min-width:700px)");
   return (
    <>
    <Stack
       flexDirection={"column"}
       gap={2}
       mb={10}
-      width={"800px"}
+      width={_700 ? "800px" : "90%"}
       mx={"auto"}
     >
       <Post />

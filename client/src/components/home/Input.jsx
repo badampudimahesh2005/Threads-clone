@@ -1,37 +1,45 @@
-import { Avatar, Button, Stack, Typography } from "@mui/material"
+import { Avatar, Button, Stack, Typography, useMediaQuery } from "@mui/material"
 
 
 const Input = () => {
+
+  const _700 = useMediaQuery("(min-width:700px)");
+
   return (
     <>
-    <Stack
-    flexDirection={"row"}
-    alignItems={"center"}
-    justifyContent={"space-between"}
-    width={"70%"}
-    height={28}
-    p={3}
-    borderBottom={'2px solid gray'}
-    my={5}
-    mx={'auto'}
-    >
-      <Stack  flexDirection={'row'} alignItems={"center"} gap={2}>
-        <Avatar src="" alt="AJ" />
-        <Typography color={"GrayText"}> Start a thread...</Typography>
-      </Stack>
+    {
+      _700 ? (<Stack
+        flexDirection={"row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        width={"70%"}
+        height={28}
+        p={3}
+        borderBottom={'2px solid gray'}
+        my={5}
+        mx={'auto'}
+        >
+          <Stack  flexDirection={'row'} alignItems={"center"} gap={2}>
+            <Avatar src="" alt="AJ" />
+            <Typography color={"GrayText"}> Start a thread...</Typography>
+          </Stack>
+    
+          <Button size="medium" sx={{
+            bgcolor:'gray',
+            color:'aliceblue',
+            ":hover": {
+              bgcolor: 'black',
+              cursor: 'pointer'
+            }
+          }}>
+            POST 
+          </Button>
+    
+        </Stack>) : (
+          null
 
-      <Button size="medium" sx={{
-        bgcolor:'gray',
-        color:'aliceblue',
-        ":hover": {
-          bgcolor: 'black',
-          cursor: 'pointer'
-        }
-      }}>
-        POST 
-      </Button>
-
-    </Stack>
+        )
+    }
     </>
   )
 }

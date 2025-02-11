@@ -1,8 +1,11 @@
 
 
-import {Avatar, Button, Stack, Typography} from '@mui/material'
+import {Avatar, Button, Stack, Typography, useMediaQuery} from '@mui/material'
 
 const ProfileBar = () => {
+
+  const _700 = useMediaQuery("(min-width:700px)");
+  
   return (
     <>
     <Stack
@@ -12,7 +15,7 @@ const ProfileBar = () => {
         py={2}
         mx={"auto"}
         boxShadow={"5px 5px 5px gray"}
-        width={"90%"}
+        width={_700 ?'80%' :"90%"}
         maxWidth={"700px"}
         borderRadius={"15px"}
         sx={{ ":hover": { cursor: "pointer" } }}
@@ -23,20 +26,20 @@ const ProfileBar = () => {
          <Typography
                 variant="h6"
                 fontWeight={"bold"}
-                fontSize={"0.9rem"}
+                fontSize={_700 ? "1rem" : "0.9rem"}
               >
                Mahesh
               </Typography>
            
             <Typography
               variant="caption"
-              fontSize={"0.75rem"}
+              fontSize={_700 ?"1.1rem": "0.75rem"}
               color={"gray"}
             >
-                @mahesh
+                This is bio
             </Typography>
-            <Typography variant="caption" fontSize={"0.9rem"}>
-              5k followers
+            <Typography variant="caption" fontSize={_700 ?"1rem": "0.9rem"}>
+             Hi ! I am a Good Boy
             </Typography>
          </Stack>
          </Stack>
