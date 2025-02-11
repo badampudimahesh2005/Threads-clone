@@ -22,7 +22,7 @@ const Navbar = () => {
        <Link to={"/search"}> <IoIosSearch size={32} /> </Link>
         <TbEdit size={32} />
         <CiHeart size={32} />
-        <RxAvatar size={32} />
+       <Link to={"/profile"}> <RxAvatar size={32} /> </Link>
 
     </Stack>
 
