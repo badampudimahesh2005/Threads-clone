@@ -22,10 +22,11 @@ const PostTwo = () => {
             >
              Mahesh
             </Typography>
-           <Link to={'/post/2'}>
+           <Link to={'/post/2'} className="link" >
            <Typography
               variant="h5"
-              fontSize={_700 ? "1.2rem" : _400 ? '1rem' : _300 ? '0.9rem' : '0.8rem'}     
+              fontSize={_700 ? "1.2rem" : _400 ? '1rem' : _300 ? '0.9rem' : '0.8rem'}  
+                
             >
              Hi guys! I am a full stack developer.
             </Typography>
