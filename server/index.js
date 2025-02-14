@@ -2,7 +2,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-
+const userRoutes = require('./routes/userRoutes');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 const app = express();
@@ -19,9 +20,14 @@ connectDB()
 });
 //-------------------------
 
+app.use(express.json());
+app.use(cookieParser());
+
 app.get('/', (req, res) => {
     res.send('Hello World');
     });
+
+app.use('/api/user',userRoutes );
 
 
 app.listen(port, () => {
