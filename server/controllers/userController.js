@@ -236,6 +236,14 @@ const logout = (req, res) => {
     }
 }
 
+const myInfo = async (req, res) => {
+    try{
+        res.status(200).json({ me: req.user});
+    }catch(err){
+        res.status(400).json({message: "Error in fetching user", error: err.message});
+    }
+}
+
 module.exports = {
      login,
       signup ,
@@ -243,5 +251,6 @@ module.exports = {
         followUser,
          updateProfile,
           searchUser,
-          logout
+          logout,
+            myInfo
         };

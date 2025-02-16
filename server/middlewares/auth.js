@@ -19,9 +19,9 @@ const auth = async (req, res, next) => {
 
         const user = await User.findById(decoded.userId)
         .populate('followers')
-        // .populate('threads')
-        // .populate('replies')
-        // .populate('reposts');
+        .populate('threads')
+        .populate('replies')
+        .populate('reposts');
 
         if (!user) {
             return res.status(401).json({ message: " No User ,Unauthorized" });

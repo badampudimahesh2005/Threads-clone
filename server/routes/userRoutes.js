@@ -1,4 +1,4 @@
-const { login, signup, userDetails, followUser, updateProfile, searchUser, logout} = require('../controllers/userController');
+const { login, signup, userDetails, followUser, updateProfile, searchUser, logout, myInfo} = require('../controllers/userController');
 
 const express = require('express');
 const auth = require('../middlewares/auth');
@@ -19,6 +19,7 @@ userRoutes.get('/search/:query', auth, searchUser);
 //route to logout
 userRoutes.post('/logout', auth, logout);
 
+userRoutes.get('/me', auth, myInfo);
 
 
 
