@@ -5,6 +5,7 @@ const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 const cookieParser = require('cookie-parser');
+const commentRoutes = require('./routes/commentRoutes');
 
 dotenv.config();
 const app = express();
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user',userRoutes );
 app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
 
 
 app.listen(port, () => {

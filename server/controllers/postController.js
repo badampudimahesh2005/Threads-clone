@@ -74,6 +74,7 @@ exports.getAllPosts = async (req, res) => {
             path: 'comments',
             populate: {
                 path: "admin",
+                select: "-password",
                 model: "User",
                 },
         });
@@ -247,6 +248,7 @@ exports.singlePost = async (req, res) => {
           path: "comments",
           populate: {
             path: "admin",
+            select: "-password",
           },
         });
       res.status(200).json({ msg: "Post Fetched !", post });
