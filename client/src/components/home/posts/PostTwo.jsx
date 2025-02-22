@@ -3,7 +3,11 @@ import { FaRegHeart, FaRegComment, FaRetweet, FaHeart } from "react-icons/fa6";
 import { IoMdSend } from "react-icons/io";
 import { Link } from "react-router-dom";
 
+import { useSelector } from "react-redux";
+
 const PostTwo = () => {
+  const {darkMode} = useSelector((state) => state.service);
+
 
   const _700 = useMediaQuery("(min-width:700px)");
   const _500 = useMediaQuery("(min-width:500px)");
@@ -26,6 +30,7 @@ const PostTwo = () => {
            <Typography
               variant="h5"
               fontSize={_700 ? "1.2rem" : _400 ? '1rem' : _300 ? '0.9rem' : '0.8rem'}  
+              className={darkMode ? "mode" : ""}
                 
             >
              Hi guys! I am a full stack developer.
@@ -45,7 +50,7 @@ const PostTwo = () => {
             <Stack flexDirection={"row"} gap={1} position={'relative'} top={-3} left={4}>
             <Typography
               variant="caption"
-              color="GrayText"
+              color={darkMode?"white":"GrayText"}
               fontSize={_700 ? "1.1rem" : '1rem'}
              
             >
@@ -53,7 +58,7 @@ const PostTwo = () => {
             </Typography>
             <Typography
               variant="caption"
-              color="GrayText"
+              color={darkMode?"white":"GrayText"}
               fontSize={_700 ? "1.1rem" : '1rem'}
              
             >

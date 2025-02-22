@@ -2,7 +2,11 @@
 import { TextField, InputAdornment } from "@mui/material";
 import {FaSearch} from "react-icons/fa";
 
+import { useSelector } from "react-redux";
+
 const SearchBar = () => {
+  const {darkMode} = useSelector((state) => state.service);
+
   return (
     <>
     <TextField
@@ -16,7 +20,7 @@ const SearchBar = () => {
         my: 5,
         mx: "auto",
         "& .MuiOutlinedInput-root": {
-          color: "black",
+          color: darkMode?"whitesmoke":"black",
           "& fieldset": {
             border: "none",
           },
@@ -27,7 +31,7 @@ const SearchBar = () => {
         startAdornment: (
           <InputAdornment
             position="start"
-            sx={{ color: "black" }}
+            sx={{ color: darkMode?"whitesmoke": "black" }}
           >
             <FaSearch />
           </InputAdornment>

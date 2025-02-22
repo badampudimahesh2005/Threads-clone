@@ -50,7 +50,7 @@ const Header = () => {
          justifyContent={'center'}
          width={"550px"}
          height={96}
-         bgcolor={"aliceblue"}
+         bgcolor={darkMode? " ":"aliceblue"}
          zIndex={2}
          
          >

@@ -2,7 +2,11 @@
 
 import {Avatar, Button, Stack, Typography, useMediaQuery} from '@mui/material'
 
+import { useSelector } from 'react-redux'
+
 const ProfileBar = () => {
+  const {darkMode} = useSelector((state) => state.service);
+
 
   const _700 = useMediaQuery("(min-width:700px)");
   
@@ -47,7 +51,7 @@ const ProfileBar = () => {
             size="medium"
             sx={{
               border: "1px solid gray",
-              color:  "black",
+              color: darkMode ?  "whitesmoke":"black",
               borderRadius: "10px",
               p: 2,
               height: 40,

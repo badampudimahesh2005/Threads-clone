@@ -3,11 +3,14 @@ import {IoIosMore} from 'react-icons/io'
 import Postone from "./posts/Postone"
 import PostTwo from "./posts/PostTwo"
 
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleMyMenu } from '../../redux/serviceSlice';
 
 
 const Post = () => {
+
+  const {darkMode} = useSelector((state) => state.service);
+
 
   const _700 = useMediaQuery("(min-width:700px)");
   const _400 = useMediaQuery("(min-width:400px)");
@@ -47,7 +50,7 @@ const Post = () => {
            justifyContent={'center'} 
            fontSize={'1rem'}   >
 
-        <Typography variant="caption" color={"GrayText"} fontSize={'1rem'} position={'relative'} top={2}> 
+        <Typography variant="caption" color={darkMode? 'white': "GrayText"} fontSize={'1rem'} position={'relative'} top={2}> 
             24h
             </Typography>
 

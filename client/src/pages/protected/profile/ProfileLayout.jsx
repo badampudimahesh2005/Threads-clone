@@ -5,9 +5,11 @@ import { Link, Outlet } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import {setOpenEditProfileModal } from "../../../redux/serviceSlice";
-
+import { useSelector } from "react-redux";
 
 const ProfileLayout = () => {
+  const {darkMode} = useSelector((state) => state.service);
+
 
   const _300 = useMediaQuery('(min-width:300px)');
   const _500= useMediaQuery('(min-width:500px)');
@@ -57,7 +59,7 @@ const ProfileLayout = () => {
           justifyContent={"space-between"}
           alignItems={"center"}
         >
-            <Typography variant="subtitle2" color={"gray"}>
+            <Typography variant="subtitle2" color={darkMode ? "whitesmoke":"gray"}>
             5k Followers
           </Typography>
           <FaInstagram size={_300 ? 40 : 24}/>
@@ -68,7 +70,7 @@ const ProfileLayout = () => {
     <Button
         size="large"
         sx={{
-          color: "black",
+          color:darkMode? "whitesmoke":"black",
           width:_700 ? "800px" : "90%",
            mx: "auto",
           textAlign: "center",
@@ -94,9 +96,9 @@ const ProfileLayout = () => {
         width={_700 ? "800px" : "90%"}
         mx={"auto"}
         >
-            <Link to={'/profile/threads/1'} className="link">Threads</Link>
-            <Link to={'/profile/replies/2'} className="link">Replies</Link>
-            <Link to={'/profile/reposts/3'} className="link">Reposts</Link>
+            <Link to={'/profile/threads/1'} className={`link ${darkMode ? "mode" : ""}`}>Threads</Link>
+            <Link to={'/profile/replies/2'} className={`link ${darkMode ? "mode" : ""}`}>Replies</Link>
+            <Link to={'/profile/reposts/3'} className={`link ${darkMode ? "mode" : ""}`}>Reposts</Link>
         </Stack>
         <Outlet />
     </>
