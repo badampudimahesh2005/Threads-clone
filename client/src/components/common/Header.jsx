@@ -3,9 +3,24 @@ import React from 'react'
 import Navbar from './Navbar'
 import { IoMenu } from "react-icons/io5";
 
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleMainMenu } from '../../redux/serviceSlice';
+
+
 const Header = () => {
+
+  const {darkMode} = useSelector((state) => state.service);
   
   const _700 = useMediaQuery("(min-width:700px)");
+
+  const dispatch = useDispatch()
+
+  const handleOpenMenu = (e) => {
+    console.log(e.currentTarget)
+    dispatch(toggleMainMenu(e.currentTarget));
+
+
+  }
 
 
   return (
@@ -20,7 +35,17 @@ const Header = () => {
      top={0}
      py={1}
      >
-         <img src="/Threads-logo-black-bg.webp"  alt="logo" width={60} height={48} />
+        {darkMode ? ( <img 
+         src="/Threads-logo-black-bg.webp"  
+         alt="logo" 
+         width={60}
+         height={50} 
+         />):( <img 
+          src="/Threads-logo-white-bg.png"  
+          alt="logo" 
+          width={60}
+          height={35} 
+          />)}
          <Stack 
          justifyContent={'center'}
          width={"550px"}
@@ -32,7 +57,7 @@ const Header = () => {
              <Navbar/>
  
          </Stack>
-       <IoMenu size={36} className='image-icon' color='gray' />
+       <IoMenu size={36} className='image-icon' color='gray' onClick={handleOpenMenu} />
      </Stack>
    ):(
     <>
@@ -56,7 +81,7 @@ const Header = () => {
       <Grid item xs={6}>
         <img src="/Threads-logo-white-bg.png" alt="logo" width={60} height={35} />
       </Grid>
-      <IoMenu size={36} className='image-icon' color='gray'/>
+      <IoMenu size={36} className='image-icon' color='gray' />
     </Grid>
     </>
 

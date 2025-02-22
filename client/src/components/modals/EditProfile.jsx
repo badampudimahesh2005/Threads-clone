@@ -2,26 +2,32 @@ import { Avatar, Box, Button, Dialog, DialogContent, DialogTitle, Stack, Typogra
 import { RxCross2 } from "react-icons/rx"
 import { useRef, useState } from "react"
 
+import { useDispatch, useSelector } from "react-redux"
+import { setOpenEditProfileModal} from "../../redux/serviceSlice"
+
 
 const EditProfile = () => {
+
+  const { openEditProfileModal } = useSelector((state) => state.service);
+  const dispatch = useDispatch();
+
 
     const _700 = useMediaQuery('(min-width:700px)');
 
     const [pic, setPic] = useState('');
     const [bio, setBio] = useState('');
 
-
     const imageRef = useRef();
 
+    
     const handleClose = () => {
-
+        dispatch(setOpenEditProfileModal(false));
     }
 
     const handlePhoto = () => {
         imageRef.current.click();
 
     }
-
     const handleUpdate = () => {
     }
 
@@ -29,7 +35,7 @@ const EditProfile = () => {
   return (
     <>
     <Dialog
-      open={true}
+      open={openEditProfileModal}
       onClose={handleClose}
       fullWidth
       fullScreen={_700 ? false : true}

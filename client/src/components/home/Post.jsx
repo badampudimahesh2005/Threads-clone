@@ -3,11 +3,22 @@ import {IoIosMore} from 'react-icons/io'
 import Postone from "./posts/Postone"
 import PostTwo from "./posts/PostTwo"
 
+import { useDispatch } from 'react-redux'
+import { toggleMyMenu } from '../../redux/serviceSlice';
+
+
 const Post = () => {
 
   const _700 = useMediaQuery("(min-width:700px)");
   const _400 = useMediaQuery("(min-width:400px)");
   const _300 = useMediaQuery("(min-width:300px)");
+
+  const dispatch = useDispatch()
+
+  const handleOpenMenu = (e) => {
+    dispatch(toggleMyMenu(e.currentTarget));
+
+  }
 
   return (
     <>
@@ -41,7 +52,7 @@ const Post = () => {
             </Typography>
 
         {/* more icon */}
-        <IoIosMore size={_700 ? 28 : 20} />
+        <IoIosMore size={_700 ? 28 : 20} onClick={handleOpenMenu}/>
         </Stack>
 
     </Stack>
