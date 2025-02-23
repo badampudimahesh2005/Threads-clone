@@ -1,11 +1,12 @@
 import { Avatar, Button, Chip, Stack , Typography, useMediaQuery} from "@mui/material"
 
 import { FaInstagram } from "react-icons/fa";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import {setOpenEditProfileModal } from "../../../redux/serviceSlice";
 import { useSelector } from "react-redux";
+import { useUserDetailsQuery } from "../../../redux/serviceApi";
 
 const ProfileLayout = () => {
   const {darkMode} = useSelector((state) => state.service);
@@ -16,6 +17,10 @@ const ProfileLayout = () => {
   const _700 = useMediaQuery('(min-width:700px)');
 
   const dispatch = useDispatch();
+
+  const params = useParams();
+
+  const {data} = useUserDetailsQuery(params.id);
 
   const handleEditProfile = () => {
     

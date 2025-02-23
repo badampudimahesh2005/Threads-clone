@@ -6,7 +6,9 @@ const {Router} = express;
 
 const userRoutes = Router();
 
+//route to login
 userRoutes.post('/login',login);
+//route to signup
 userRoutes.post('/signup',signup);
 //route to get the user details
 userRoutes.get('/:id', userDetails);
@@ -16,10 +18,12 @@ userRoutes.put('/follow/:id', auth , followUser);
 userRoutes.put('/update-profile', auth , updateProfile);
 //route to search a user
 userRoutes.get('/search/:query', auth, searchUser);
+//route to get the user info
+userRoutes.get('/', auth, myInfo);
+
 //route to logout
 userRoutes.post('/logout', auth, logout);
 
-userRoutes.get('/me', auth, myInfo);
 
 
 

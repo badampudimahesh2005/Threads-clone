@@ -2,11 +2,21 @@
 
 
 import { Button, Stack, TextField, Typography, useMediaQuery } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useLoginMutation, useSigninMutation } from '../redux/serviceApi';
 
 const Register = () => {
-
     const _700 =useMediaQuery('(min-width:700px)');
+
+    const [signinUser, signinUserData] = useSigninMutation();
+    const [loginUser, loginUserData] = useLoginMutation();
+    //signinUserData contains the isloding, isFetching, error, data, etc
+    //signinUser is the function that we will call to signin the user
+    //signinUser({email, password}) will signin the user
+    //signinUserData.data will contain the user data
+    //signinUserData.error will contain the error
+    //signinUserData.isLoading will contain the loading state
+
 
     const [login, setLogin] = useState(false);
     const [userName, setUserName] = useState("");
@@ -19,16 +29,28 @@ const Register = () => {
     }
 
     
-    const handleRegister = () => {
+    const handleRegister = async () => {
         const data = { email, password, userName};
-        console.log(data);
+        await signinUser(data);
     }
 
-    const handleLogin = () => {
-       const data = { email, password}
-       console.log(data);
-       
+    const handleLogin = async () => {
+       const data = { email, password};
+        await loginUser(data);
+          
     }
+
+    useEffect(() => {
+        if(signinUserData.isSuccess) {
+            console.log(signinUserData.data);
+        }
+
+        if(loginUserData.isSuccess) {
+            console.log(loginUserData.data);
+        }
+
+    }, [signinUserData.isSuccess, loginUserData.isSuccess]);
+
         
 
 
@@ -78,7 +100,7 @@ const Register = () => {
                 }
             }}
             onClick={login? handleLogin:handleRegister}
-            >Sign Up</Button>
+            >{login ? "login":"sign Up"}</Button>
             <Typography 
             variant='subtitle1' 
             fontSize={_700 ? '1.3rem': '1rem'} 

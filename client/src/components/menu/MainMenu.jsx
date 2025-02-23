@@ -1,12 +1,16 @@
 import { Menu, MenuItem } from "@mui/material"
 import { Link } from "react-router-dom"
 
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleColorMode, toggleMainMenu } from '../../redux/serviceSlice';
+import { addMyInfo, toggleColorMode, toggleMainMenu } from '../../redux/serviceSlice';
+import { useLogoutMeMutation } from "../../redux/serviceApi";
 
 const MainMenu = () => {
 
   const { anchorE1 } = useSelector((state) => state.service)
+
+  const [logoutMe, logoutMeData] = useLogoutMeMutation();
 
   const dispatch = useDispatch()
 
@@ -21,9 +25,19 @@ const MainMenu = () => {
 
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+      handleClose();
+     await  logoutMe();
 
     }
+
+    useEffect(() => {
+      if(logoutMeData.isSuccess){
+        // dispatch(addMyInfo(null));
+        console.log('logout success');
+        // window.location.reload();
+      }
+    }, [logoutMeData.isSuccess])
 
   return (
     <>

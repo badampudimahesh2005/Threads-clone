@@ -39,7 +39,9 @@ const signup = async (req, res) => {
              {maxAge: maxAge,
              httpOnly: true,
               secure: true,
-               sameSite: 'none'
+                sameSite: 'none',
+             partitioned: true
+
             }
         );
     
@@ -78,7 +80,8 @@ const login = async (req, res) => {
             {maxAge: maxAge,
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            partitioned: true,
             }
         ) ;
         res.status(200).json({message: "User login successfully"});
@@ -221,15 +224,24 @@ const searchUser = async (req, res) => {
 
 const logout = (req, res) => {
     try{
-        res.cookie("token", "", {
-            maxAge: 0,
+        // res.cookie("token", "", {
+        //     maxAge: 0,
+        //     httpOnly: true,
+        //     sameSite: "none",
+        //     secure: true,
+        //     partitioned: true,
+        //   });
+
+        //clear the cookie
+        res.clearCookie('token', {
             httpOnly: true,
-            sameSite: "none",
             secure: true,
+            sameSite: 'none',
             partitioned: true,
-          });
+        });
+
       
-          res.status(200).json({ msg: "You logged out !" });
+        res.status(200).json({ msg: "You logged out !" });
 
     }catch(err){
         res.status(400).json({message: "Error in logout", error: err.message});
@@ -238,6 +250,10 @@ const logout = (req, res) => {
 
 const myInfo = async (req, res) => {
     try{
+        if(!req.user){
+            return res.status(400).json({message: "User not found"});
+        }
+        
         res.status(200).json({ me: req.user});
     }catch(err){
         res.status(400).json({message: "Error in fetching user", error: err.message});
