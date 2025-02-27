@@ -16,7 +16,6 @@ const Header = () => {
   const dispatch = useDispatch()
 
   const handleOpenMenu = (e) => {
-    // console.log(e.currentTarget)
     dispatch(toggleMainMenu(e.currentTarget));
 
 

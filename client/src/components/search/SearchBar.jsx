@@ -2,10 +2,56 @@
 import { TextField, InputAdornment } from "@mui/material";
 import {FaSearch} from "react-icons/fa";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useLazySearchUsersQuery } from "../../redux/serviceApi";
+import { addToSearchedUsers } from "../../redux/serviceSlice";
+import { toast } from "react-toastify";
+import { Bounce } from "react-toastify";
+
 
 const SearchBar = () => {
   const {darkMode} = useSelector((state) => state.service);
+  const [query, setQuery] = useState();
+
+  const [searchUser, searchUserData] = useLazySearchUsersQuery();
+
+  const dispatch = useDispatch();
+
+  const handleSearch = async (e) => {
+    if (query.trim() && e.key === "Enter") {
+      await searchUser(query.trim());
+      setQuery("");
+    }
+  };
+
+  useEffect(() => {
+    if (searchUserData.isSuccess) {
+      dispatch(addToSearchedUsers(searchUserData.data.users));
+      toast.success(searchUserData.data.msg, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+    if (searchUserData.isError) {
+      toast.success(searchUserData.error.data.msg, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+  }, [searchUserData.isSuccess, searchUserData.isError]);
 
   return (
     <>
@@ -37,6 +83,8 @@ const SearchBar = () => {
           </InputAdornment>
         ),
       }}
+      onChange={(e) => setQuery(e.target.value)}
+      onKeyUp={handleSearch}
     />
   </>
   )

@@ -1,13 +1,14 @@
 import { Avatar, AvatarGroup, Badge, Stack, Stepper, useMediaQuery } from "@mui/material"
+import { Link } from "react-router-dom"
 
-
-const Postone = () => {
+const Postone = ( {e}) => {
 
   const _700 = useMediaQuery("(min-width:700px)");
 
   return (
     <>
     <Stack flexDirection={'column'} alignItems={'center'} justifyContent={'space-between'} >
+    <Link to={`/profile/threads/${e?.admin._id}`}>
         <Badge
         overlap="circular"
         anchorOrigin={{
@@ -22,15 +23,19 @@ const Postone = () => {
                 width: _700 ? 20 : 14, 
                 height: _700 ? 20 : 14,
                 bgcolor: 'green',
-                 position: 'relative',
+                 position:_700? 'relative':'initial',
                 right: _700 ? 4 : 0,
                 bottom: _700 ? 4 : 0,
                 
                 }}
-             > + </Avatar>
+             > {" "}+{" "} </Avatar>
         }>
-        <Avatar alt="AJ" src="" sx={{width:_700 ? 40 :32, height: _700 ? 40 : 32}} />
+        <Avatar
+        alt={e ? e.admin.userName : ""}
+        src={e ? e.admin.profilePic : ""}
+         sx={{width:_700 ? 40 :32, height: _700 ? 40 : 32}} />
         </Badge>
+        </Link>
         <Stack
         flexDirection={'column'}
         alignItems={'center'}
@@ -46,15 +51,35 @@ const Postone = () => {
             }}>
 
             </Stepper>
-            <AvatarGroup total={4} sx={{
-                '& .MuiAvatar-root': {
+            {e ? (
+            e.comments.length > 0 ? (
+              <AvatarGroup
+                total={e?.comments.length}
+                sx={{
+                  "& .MuiAvatar-root": {
                     width: _700 ? 24 : 16,
                     height: _700 ? 24 : 16,
                     fontSize: _700 ? 12 : 8,
-                }
-            }}>
-                <Avatar alt="Rem0" src="" />
-            </AvatarGroup>
+                  },
+                }}
+              >
+                <Avatar
+                  src={e?.comments[0].admin.profilePic}
+                  alt={e?.comments[0].admin.userName}
+                />
+                {e.comments.length > 1 ? (
+                  <Avatar
+                    src={e?.comments[1].admin.profilePic}
+                    alt={e?.comments[1].admin.userName}
+                  />
+                ) : null}
+              </AvatarGroup>
+            ) : (
+              ""
+            )
+          ) : (
+            ""
+          )}
 
         </Stack>
             

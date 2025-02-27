@@ -1,14 +1,19 @@
 import { Avatar, Box, Button, Dialog, DialogContent, DialogTitle, Stack, Typography, useMediaQuery } from "@mui/material"
 import { RxCross2 } from "react-icons/rx"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
+import Loading from "../common/Loading"
 
 import { useDispatch, useSelector } from "react-redux"
 import { setOpenEditProfileModal} from "../../redux/serviceSlice"
+import { useParams } from "react-router"
+import { useUpdateProfileMutation, useUserDetailsQuery } from "../../redux/serviceApi"
+import { toast } from "react-toastify"
+import { Bounce } from "react-toastify"
 
 
 const EditProfile = () => {
 
-  const { openEditProfileModal } = useSelector((state) => state.service);
+  const { openEditProfileModal, myInfo } = useSelector((state) => state.service);
   const dispatch = useDispatch();
 
 
@@ -17,8 +22,11 @@ const EditProfile = () => {
     const [pic, setPic] = useState('');
     const [bio, setBio] = useState('');
 
-    const imageRef = useRef();
+    const params = useParams();
 
+    const imageRef = useRef();
+    const [updateProfile, updateProfileData] = useUpdateProfileMutation();
+    const { refetch } = useUserDetailsQuery(params?.id);
     
     const handleClose = () => {
         dispatch(setOpenEditProfileModal(false));
@@ -28,8 +36,47 @@ const EditProfile = () => {
         imageRef.current.click();
 
     }
-    const handleUpdate = () => {
+    const handleUpdate =  async() => {
+      if (pic || bio) {
+        const data = new FormData();
+        if (bio) {
+          data.append("text", bio);
+        }
+        if (pic) {
+          data.append("media", pic);
+        }
+        await updateProfile(data);
+      }
+      dispatch(setOpenEditProfileModal(false));
     }
+
+    useEffect(() => {
+      if (updateProfileData.isSuccess) {
+        refetch();
+        toast.success(updateProfileData.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+      if (updateProfileData.isError) {
+        toast.error(updateProfileData.error.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    }, [updateProfileData.isError, updateProfileData.isSuccess]);
 
 
   return (
@@ -40,7 +87,13 @@ const EditProfile = () => {
       fullWidth
       fullScreen={_700 ? false : true}
     >
-          <Box
+      {
+        updateProfileData.isLoading ? (
+          <Stack height={'60vh'}>
+            <Loading />
+          </Stack>):
+          <>
+           <Box
             position={"absolute"}
             top={20}
             right={20}
@@ -53,11 +106,18 @@ const EditProfile = () => {
           </DialogTitle>
           <DialogContent>
             <Stack flexDirection={"column"} gap={1}>
-              <Avatar
-                src={ pic?URL.createObjectURL(pic):''}
-                alt= ''
-                sx={{ width: 96, height: 96, alignSelf: "center" }}
-              />
+            <Avatar
+                  src={
+                    pic
+                      ? URL.createObjectURL(pic)
+                      : myInfo
+                      ? myInfo.profilePic
+                      : ""
+                  }
+                  alt={myInfo ? myInfo.userName : ""}
+                  sx={{ width: 96, height: 96, alignSelf: "center" }}
+                />
+
               <Button
                 size="large"
                 sx={{
@@ -90,7 +150,7 @@ const EditProfile = () => {
               </Typography>
               <input
                 type="text"
-                value={ "Mahesh_4221"}
+                value={ myInfo ? myInfo.userName : ""}
                 readOnly
                 className="text1"
               />
@@ -106,7 +166,7 @@ const EditProfile = () => {
               </Typography>
               <input
                 type="text"
-                value={"mahesh@gmail.com"}
+                value={myInfo ? myInfo.email : ""}
                 readOnly
                 className="text1"
               />
@@ -118,14 +178,15 @@ const EditProfile = () => {
                 fontSize={"1.2rem"}
                 my={2}
               >
-                Bio
+                bio
               </Typography>
               <input
                 type="text"
                 className="text1"
-                placeholder=''
-                value={"this is bio"}
+                placeholder={myInfo ? myInfo.bio : ""}
+                value={bio? bio : ""}
                 onChange={(e) => setBio(e.target.value)}
+                
               />
             </Stack>
             <Button
@@ -146,6 +207,10 @@ const EditProfile = () => {
               Update{" "}
             </Button>
           </DialogContent>
+
+          </>
+      }
+         
     </Dialog>
   </>
   );

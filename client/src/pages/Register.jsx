@@ -5,6 +5,10 @@ import { Button, Stack, TextField, Typography, useMediaQuery } from '@mui/materi
 import { useEffect, useState } from 'react'
 import { useLoginMutation, useSigninMutation } from '../redux/serviceApi';
 
+import { toast } from 'react-toastify';
+import { Bounce } from 'react-toastify';
+import  Loading  from '../components/common/Loading';
+
 const Register = () => {
     const _700 =useMediaQuery('(min-width:700px)');
 
@@ -41,18 +45,66 @@ const Register = () => {
     }
 
     useEffect(() => {
-        if(signinUserData.isSuccess) {
-            console.log(signinUserData.data);
+        if (signinUserData.isSuccess) {
+          toast.success(signinUserData.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
         }
-
-        if(loginUserData.isSuccess) {
-            console.log(loginUserData.data);
+        if (signinUserData.isError) {
+          toast.error(signinUserData.error.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
         }
+      }, [signinUserData.isSuccess, signinUserData.isError]);
+    
+      useEffect(() => {
+        if (loginUserData.isSuccess) {
+          toast.success(loginUserData.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+        if (loginUserData.isError) {
+          toast.error(loginUserData.error.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      }, [loginUserData.isSuccess, loginUserData.isError]);
 
-    }, [signinUserData.isSuccess, loginUserData.isSuccess]);
-
-        
-
+      if (signinUserData.isLoading || loginUserData.isLoading) {
+        return (
+          <Stack height={"90vh"} alignItems={"center"} justifyContent={"center"}>
+            <Loading />
+          </Stack>
+        );
+      }
 
   return (
     <>

@@ -10,19 +10,40 @@ import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setOpenAddPostModal } from '../../redux/serviceSlice';
+import { useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
 
 
 const Navbar = () => {
-  const {darkMode} = useSelector((state) => state.service);
+  const {darkMode, myInfo} = useSelector((state) => state.service);
 
 
   const _300 = useMediaQuery("(min-width:300px)");
+  const _700 = useMediaQuery("(min-width:700px)");
 
   const dispatch = useDispatch()
+  const navigate = useNavigate();
+
+  const [showArrow, setShowArrow] = useState(false);
+  const checkArrow = () => {
+    if (window.location.pathname.includes("/post/") && _700) {
+      setShowArrow(true);
+      return;
+    }
+    setShowArrow(false);
+  };
 
   const handleAddPost = () => {
     dispatch(setOpenAddPostModal(true));
   }
+
+  const handleNavigate = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    checkArrow();
+  }, [window.location.pathname]);
 
   return (
     <>
@@ -32,7 +53,14 @@ const Navbar = () => {
     justifyContent={"space-around"}
     alignItems={"center"}
     >
-      <FiArrowLeft size={_300 ? 32 : 24}  className='image-icon' color={darkMode? 'white':'black'}/>
+      {showArrow ? (
+          <FiArrowLeft
+            size={_300 ? 32 : 24}
+            className="image-icon"
+            onClick={handleNavigate}
+            color={darkMode ? "white" : "black"}
+          />
+        ) : null}
 
        <Link to={"/"} className='link'> 
        <GoHome size={_300 ? 32 : 24} color={darkMode? 'white':'black'} />
@@ -42,11 +70,15 @@ const Navbar = () => {
         <IoIosSearch size={_300 ? 32 : 24} color={darkMode? 'white':'black'}/> 
         </Link>
 
-        <TbEdit  size={_300 ? 32 : 24} className='image-icon' color={darkMode? 'white':'black'} onClick={handleAddPost} />
+        <TbEdit 
+         size={_300 ? 32 : 24}
+        className='image-icon'
+         color={darkMode? 'white':'black'} 
+         onClick={handleAddPost} />
 
         <CiHeart size={_300 ? 32 : 24} className='image-icon' color={darkMode? 'white':'black'}/>
         
-       <Link to={"/profile"} className='link'>
+       <Link to={`/profile/threads/${myInfo?._id}`} className="link">
         <RxAvatar size={_300 ? 32 : 24} color={darkMode? 'white':'black'} /> 
         </Link>
 

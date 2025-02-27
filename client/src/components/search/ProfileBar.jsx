@@ -3,8 +3,9 @@
 import {Avatar, Button, Stack, Typography, useMediaQuery} from '@mui/material'
 
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-const ProfileBar = () => {
+const ProfileBar = ({e}) => {
   const {darkMode} = useSelector((state) => state.service);
 
 
@@ -25,28 +26,31 @@ const ProfileBar = () => {
         sx={{ ":hover": { cursor: "pointer" } }}
       >
          <Stack flexDirection={"row"} gap={2}>
-         <Avatar  src="" alt="" />
+         <Avatar src={e ? e.profilePic : ""} alt={e ? e.userName : ""} />
          <Stack flexDirection={'column'}>
+         <Link to={`/profile/threads/${e._id}`} className="link">
          <Typography
                 variant="h6"
                 fontWeight={"bold"}
                 fontSize={_700 ? "1rem" : "0.9rem"}
               >
-               Mahesh
+               {e ? e.userName : ""}
               </Typography>
+              </Link>
            
             <Typography
               variant="caption"
               fontSize={_700 ?"1.1rem": "0.75rem"}
               color={"gray"}
             >
-                This is bio
+              {e? e.bio:""}
             </Typography>
             <Typography variant="caption" fontSize={_700 ?"1rem": "0.9rem"}>
-             Hi ! I am a Good Boy
+             {e? e.followers.length : 0} Followers
             </Typography>
          </Stack>
          </Stack>
+         <Link to={`/profile/threads/${e._id}`} className="link">
          <Button
             size="medium"
             sx={{
@@ -59,6 +63,7 @@ const ProfileBar = () => {
           >
             Follow
           </Button>
+          </Link>
         
       </Stack>
     </>

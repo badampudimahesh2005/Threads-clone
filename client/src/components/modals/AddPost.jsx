@@ -3,16 +3,23 @@ import { useMediaQuery } from "@mui/material"
 import { RxCross2 } from "react-icons/rx"
 import { FaImages } from "react-icons/fa"
 import { useRef, useState } from "react"
+import Loading from "../common/Loading"
 
 import { useDispatch } from "react-redux"
 import { setOpenAddPostModal } from "../../redux/serviceSlice"
 import { useSelector } from "react-redux"
+import { useAddPostMutation } from "../../redux/serviceApi"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
+import { Bounce } from "react-toastify"
 
 
 
 const AddPost = () => {
 
-  const {openAddPostModal} = useSelector((state) => state.service);
+  const {openAddPostModal, myInfo} = useSelector((state) => state.service);
+
+  const [addNewPost, addNewPostData] = useAddPostMutation();
 
     const _700 = useMediaQuery('(min-width:700px)');
     const _500 = useMediaQuery('(min-width:500px)');
@@ -34,6 +41,47 @@ const AddPost = () => {
         mediaref.current.click();
     }
 
+    const handlePost = async () => {
+      const data = new FormData();
+      if (text) {
+        data.append("text", text);
+      }
+      if (media) {
+        data.append("media", media);
+      }
+      await addNewPost(data);
+    };
+
+    useEffect(() => {
+      if (addNewPostData.isSuccess) {
+        setText();
+        setMedia();
+        dispatch(setOpenAddPostModal(false));
+        toast.success(addNewPostData.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+      if (addNewPostData.isError) {
+       toast.error(addNewPostData.error.data.msg, {
+         position: "top-center",
+         autoClose: 2500,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         theme: "colored",
+         transition: Bounce,
+       });
+      }
+    }, [addNewPostData.isSuccess, addNewPostData.isError]);
+
 
   return (
     <>
@@ -43,7 +91,13 @@ const AddPost = () => {
         fullWidth
         fullScreen={_700 ? false : true}
       >
-        <Box
+    {
+      addNewPostData?.isLoading ?
+       (
+      <Stack height={'60vh'}> <Loading /> </Stack>
+       ):
+       <>
+           <Box
         position={'absolute'}
         top={20}
         right={20}
@@ -54,10 +108,13 @@ const AddPost = () => {
         <DialogTitle textAlign={'center'} mb={5}>New Thread...</DialogTitle>
         <DialogContent>
             <Stack flexDirection={'row'} gap={2} mb={5}>
-                <Avatar src="" alt=""  />
+            <Avatar
+                  src={myInfo ? myInfo.profilePic : ""}
+                  alt={myInfo ? myInfo.userName : ""}
+                />
                 <Stack>
                     <Typography variant={'h6'} fontWeight={'bold'} fontSize={'1rem'}>
-                        Mahesh_4221
+                       {myInfo ? myInfo.userName : ""}
                     </Typography>
                     {/* text area */}
                     <textarea cols={_500 ? 40: 25} rows={2} className="text1" placeholder="Start a Thread..." autoFocus
@@ -90,9 +147,14 @@ const AddPost = () => {
                         bgcolor: 'gray',
                         cursor: 'pointer',
                     }
-                    }}>Post</Button>
+                    }}
+                    onClick={handlePost}
+                    >Post</Button>
             </Stack>
         </DialogContent>
+
+       </>
+    }
     </Dialog>
     </>
   )

@@ -2,13 +2,19 @@ import { Menu, MenuItem } from "@mui/material"
 
 import { useDispatch, useSelector } from 'react-redux'
 import { toggleMyMenu } from '../../redux/serviceSlice';
+import { useDeletePostMutation } from "../../redux/serviceApi";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { Bounce } from "react-toastify";
+
 
 
 const MyMenu = () => {
 
-  const {anchorE2} = useSelector((state) => state.service)
+  const {anchorE2, postId} = useSelector((state) => state.service)
 
   const dispatch = useDispatch();
+  const [deletePost, deletePostData] = useDeletePostMutation();
 
 
     const handleClose = () => {
@@ -16,9 +22,38 @@ const MyMenu = () => {
     }
 
 
-    const handleDeletePost = () => {
+    const handleDeletePost =  async () => {
+      handleClose();
+      await deletePost(postId);
 
     }
+
+    useEffect(() => {
+      if (deletePostData.isSuccess) {
+        toast.warning(deletePostData.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+      if (deletePostData.isError) {
+        toast.error(deletePostData.error.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    }, [deletePostData.isSuccess, deletePostData.isError]);
 
   return (
     <>

@@ -3,16 +3,20 @@ import { Link } from "react-router-dom"
 
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addMyInfo, toggleColorMode, toggleMainMenu } from '../../redux/serviceSlice';
+import {  toggleColorMode, toggleMainMenu } from '../../redux/serviceSlice';
 import { useLogoutMeMutation } from "../../redux/serviceApi";
+import { toast } from "react-toastify";
+import { Bounce } from "react-toastify";
+
 
 const MainMenu = () => {
 
-  const { anchorE1 } = useSelector((state) => state.service)
+  const { anchorE1, myInfo } = useSelector((state) => state.service)
 
   const [logoutMe, logoutMeData] = useLogoutMeMutation();
 
   const dispatch = useDispatch()
+
 
     const handleClose = () => {
         dispatch(toggleMainMenu(null));
@@ -32,12 +36,31 @@ const MainMenu = () => {
     }
 
     useEffect(() => {
-      if(logoutMeData.isSuccess){
-        // dispatch(addMyInfo(null));
-        console.log('logout success');
-        // window.location.reload();
+      if (logoutMeData.isSuccess) {
+        toast.warning(logoutMeData.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
       }
-    }, [logoutMeData.isSuccess])
+      if (logoutMeData.isError) {
+        toast.error(logoutMeData.error.data.msg, {
+          position: "top-center",
+          autoClose: 2500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+          transition: Bounce,
+        });
+      }
+    }, [logoutMeData.isSuccess, logoutMeData.isError]);
 
   return (
     <>
@@ -49,7 +72,7 @@ const MainMenu = () => {
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <MenuItem onClick={handleToggleTheme}>Toggle Theme</MenuItem>
-        <Link to={'/profile/threads/2'} className="link">
+        <Link to={`/profile/threads/${myInfo._id}}`} className="link">
           <MenuItem>My Profile</MenuItem>
         </Link>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>

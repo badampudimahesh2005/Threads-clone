@@ -1,24 +1,78 @@
 import { Avatar, Menu, MenuItem, Stack , Typography, useMediaQuery} from '@mui/material'
 import {IoIosMore} from 'react-icons/io'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {useSelector} from 'react-redux'
+import { useDeleteCommentMutation, useSinglePostQuery } from '../../../redux/serviceApi'
 
-const Comments = () => {
-  const {darkMode} = useSelector((state) => state.service);
+const Comments = ({e, postId}) => {
+  const {darkMode, myInfo} = useSelector((state) => state.service);
 
 
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isAdmin, setIsAdmin] = useState();
+
 
   const _700 = useMediaQuery("(min-width:700px)");
+
+  const [deleteComment, deleteCommentData] = useDeleteCommentMutation();
+  const { refetch } = useSinglePostQuery(postId);
 
   const handleClose = () => {
     setAnchorEl(null);
 
   }
 
-  const handleDeleteComment = () => {
+  const handleDeleteComment = async () => {
+    const info = {
+      postId,
+      id: e?._id,
+    };
+    await deleteComment(info);
+    handleClose();
+    refetch();
 
   }
+
+  const checkIsAdmin = () => {
+    if (e && myInfo) {
+      if (e.admin._id === myInfo._id) {
+        setIsAdmin(true);
+        return;
+      }
+    }
+    setIsAdmin(false);
+  };
+
+  useEffect(() => {
+    checkIsAdmin();
+  }, []);
+
+  useEffect(() => {
+    if (deleteCommentData.isSuccess) {
+      toast.success(deleteCommentData.data.msg, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+    if (deleteCommentData.isError) {
+      toast.error(deleteCommentData.error.data.msg, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+  }, [deleteCommentData.isSuccess, deleteCommentData.isError]);
 
   return (
    <>
@@ -32,13 +86,16 @@ const Comments = () => {
     width={'90%'}
     >
         <Stack flexDirection={"row"} gap={_700 ?2 :1}>
-            <Avatar src='' alt='' />
+        <Avatar
+            src={e ? e.admin.profilePic : ""}
+            alt={e ? e.admin.userName : ""}
+          />
             <Stack flexDirection={"column"}>
             <Typography variant="h6" fontWeight={"bold"} fontSize={"0.9rem"}>
-             Mahesh_4221
+            {e ? e.admin.userName : ""}
             </Typography>
             <Typography variant="subtitle2" fontSize={"0.9rem"}>
-              This is a comment
+            {e ? e.text : ""}
             </Typography>
           </Stack>
         </Stack>
@@ -51,11 +108,15 @@ const Comments = () => {
         >
           <p>24min</p>
           
+          {isAdmin ? (
             <IoIosMore
-              size={ _700 ? 28 : 20}
+              size={_700 ? 28 : 20}
               className="image-icon"
               onClick={(e) => setAnchorEl(e.currentTarget)}
             />
+          ) : (
+            <IoIosMore size={_700 ? 28 : 20} className="image-icon" />
+          )}
         </Stack>
     </Stack>
 

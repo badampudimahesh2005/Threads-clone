@@ -3,72 +3,183 @@ import { FaRegHeart, FaRegComment, FaRetweet, FaHeart } from "react-icons/fa6";
 import { IoMdSend } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-import { useSelector } from "react-redux";
+import { useSelector, } from "react-redux";
+import { useState , useEffect} from "react";
+import { useLikePostMutation, useRepostMutation } from "../../../redux/serviceApi";
 
-const PostTwo = () => {
-  const {darkMode} = useSelector((state) => state.service);
+import { toast } from "react-toastify";
+import { Bounce } from "react-toastify";
 
+
+const PostTwo = ({e}) => {
+  const {darkMode, myInfo} = useSelector((state) => state.service);
+  const [likePost] = useLikePostMutation();
+  const [repost, repostData] = useRepostMutation();
+
+  const [isLiked, setIsLiked] = useState();
 
   const _700 = useMediaQuery("(min-width:700px)");
   const _500 = useMediaQuery("(min-width:500px)");
   const _400 = useMediaQuery("(min-width:400px)");
   const _300 = useMediaQuery("(min-width:300px)");
+  
+  const handleLike = async () => {
+    await likePost(e?._id);
+  };
+
+  const checkIsLiked = () => {
+    if (e?.likes.length > 0) {
+      const variable = e.likes.filter((ele) => ele._id === myInfo._id);
+      if (variable.length > 0) {
+        setIsLiked(true);
+        return;
+      }
+    }
+    setIsLiked(false);
+  };
+
+  const handleRepost = async () => {
+    await repost(e?._id);
+  };
+
+  useEffect(() => {
+    checkIsLiked();
+  }, [e]);
+
+  useEffect(() => {
+    if (repostData.isSuccess) {
+      toast.success(repostData.data.msg, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+    if (repostData.isError) {
+      toast.success(repostData.error.data.msg, {
+        position: "top-center",
+        autoClose: 2500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored",
+        transition: Bounce,
+      });
+    }
+  }, [repostData.isSuccess, repostData.isError]);
+
   return (
     <>
-    <Stack
-     flexDirection={"column"} justifyContent={"space-between"}>
+      <Stack flexDirection={"column"} justifyContent={"space-between"}>
         <Stack flexDirection={"column"} gap={2}>
-        <Stack flexDirection={"column"}>
+          <Stack flexDirection={"column"}>
             <Typography
               variant="h6"
-              fontSize={_300 ?"1rem" : "0.8rem"}
+              fontSize={_300 ? "1rem" : "0.8rem"}
               fontWeight={"bold"}
             >
-             Mahesh
+              {e ? e.admin.userName : ""}
             </Typography>
-           <Link to={'/post/2'} className="link" >
-           <Typography
-              variant="h5"
-              fontSize={_700 ? "1.2rem" : _400 ? '1rem' : _300 ? '0.9rem' : '0.8rem'}  
-              className={darkMode ? "mode" : ""}
-                
-            >
-             Hi guys! I am a full stack developer.
-            </Typography>
-           </Link>
-            </Stack>
-            <img src="/error-bg.png" alt="" width={_700 ? '400px' : _500 ? '350px' : _400 ? "250px" : _300 ? "180px": "150px"} loading="lazy"  height={"auto"}/>
+            <Link to={`/post/${e?._id}`} className="link">
+              <Typography
+                variant="h5"
+                fontSize={
+                  _700 ? "1.2rem" : _400 ? "1rem" : _300 ? "0.9rem" : "0.8rem"
+                }
+                className={darkMode ? "mode" : ""}
+              >
+                {e ? e.text : ""}
+              </Typography>
+            </Link>
+          </Stack>
+          {e ? (
+            e.media ? (
+              <img
+                src={e?.media}
+                alt={e?.media}
+                loading="lazy"
+                width={
+                  _700
+                    ? "400px"
+                    : _500
+                    ? "350px"
+                    : _400
+                    ? "250px"
+                    : _300
+                    ? "180px"
+                    : "150px"
+                }
+                height={"auto"}
+              />
+            ) : null
+          ) : null}
         </Stack>
-        {/* like,comment,share icons */}
         <Stack flexDirection={"column"} gap={1}>
-            <Stack flexDirection={"row"} gap={2} m={1}>
-                <FaRegHeart size={_700 ? 32 : _300 ? 28 : 24}/>
-                <FaRegComment size={_700 ? 32 : _300 ? 28 : 24}/>
-                <FaRetweet size={_700 ? 32 : _300 ? 28 : 24}/>
-                <IoMdSend size={_700 ? 32 : _300 ? 28 : 24}/>
-            </Stack>
-            <Stack flexDirection={"row"} gap={1} position={'relative'} top={-3} left={4}>
-            <Typography
-              variant="caption"
-              color={darkMode?"white":"GrayText"}
-              fontSize={_700 ? "1.1rem" : '1rem'}
-             
-            >
-            2 Likes
-            </Typography>
-            <Typography
-              variant="caption"
-              color={darkMode?"white":"GrayText"}
-              fontSize={_700 ? "1.1rem" : '1rem'}
-             
-            >
-            1 comment
-            </Typography>
-            </Stack>
-        </Stack>
-    </Stack>
-    </>
-  )
-}
+          <Stack flexDirection={"row"} gap={2} m={1}>
+            {isLiked ? (
+              <FaHeart size={_700 ? 32 : _300 ? 28 : 24} onClick={handleLike} />
+            ) : (
+              <FaRegHeart
+                size={_700 ? 32 : _300 ? 28 : 24}
+                onClick={handleLike}
+              />
+            )}
 
-export default PostTwo
+            <Link to={`/post/${e?._id}#comment`} className="link">
+              <FaRegComment size={_700 ? 32 : _300 ? 28 : 24} color={darkMode?"white":"black"}/>
+            </Link>
+            <FaRetweet
+              size={_700 ? 32 : _300 ? 28 : 24}
+              onClick={handleRepost}
+            />
+            <IoMdSend size={_700 ? 32 : _300 ? 28 : 24} />
+          </Stack>
+          <Stack
+            flexDirection={"row"}
+            gap={1}
+            position={"relative"}
+            top={-3}
+            left={4}
+          >
+            {e ? (
+              e.likes.length > 0 ? (
+                <Typography
+                  variant="caption"
+                  color={darkMode ? "white" : "GrayText"}
+                  fontSize={_700 ? "1.1rem" : "1rem"}
+                >
+                  {e.likes.length} likes .
+                </Typography>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+            {e ? (
+              e.comments.length > 0 ? (
+                <Typography
+                  variant="caption"
+                  color={darkMode ? "white" : "GrayText"}
+                  fontSize={_700 ? "1.1rem" : "1rem"}
+                >
+                  {e.comments.length} comment{" "}
+                </Typography>
+              ) : (
+                ""
+              )
+            ) : (
+              ""
+            )}
+          </Stack>
+        </Stack>
+      </Stack>
+    </>
+  );
+};
+export default PostTwo;

@@ -4,24 +4,44 @@ import Postone from "./posts/Postone"
 import PostTwo from "./posts/PostTwo"
 
 import { useDispatch, useSelector } from 'react-redux'
-import { toggleMyMenu } from '../../redux/serviceSlice';
+import { addPostId, toggleMyMenu } from '../../redux/serviceSlice';
+import { useEffect , useState} from "react"
 
 
-const Post = () => {
+const Post = ({e}) => {
+  
 
-  const {darkMode} = useSelector((state) => state.service);
+  const {darkMode, myInfo} = useSelector((state) => state.service);
 
 
   const _700 = useMediaQuery("(min-width:700px)");
   const _400 = useMediaQuery("(min-width:400px)");
   const _300 = useMediaQuery("(min-width:300px)");
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
   const dispatch = useDispatch()
 
-  const handleOpenMenu = (e) => {
-    dispatch(toggleMyMenu(e.currentTarget));
+  const handleOpenMenu = (event) => {
+    dispatch(addPostId(e._id));
+    dispatch(toggleMyMenu(event.currentTarget));
 
   }
+
+  const checkAdmin = () => {
+    if(e?.admin._id === myInfo?._id){
+      setIsAdmin(true);
+
+    }
+  };
+
+  useEffect(() => {
+    if(e && myInfo){
+      checkAdmin();
+     
+    }
+
+  }, [e, myInfo]);
 
   return (
     <>
@@ -41,8 +61,8 @@ const Post = () => {
 
     }}>
         <Stack   flexDirection={'row'} gap={_700 ? 2 : 1} >
-            <Postone />
-            <PostTwo />
+            <Postone e={e} />
+            <PostTwo e={e} />
         </Stack>
         <Stack  
          flexDirection={'row'}
@@ -55,7 +75,11 @@ const Post = () => {
             </Typography>
 
         {/* more icon */}
-        <IoIosMore size={_700 ? 28 : 20} onClick={handleOpenMenu}/>
+        {isAdmin ? (
+            <IoIosMore size={_700 ? 28 : 20} onClick={handleOpenMenu} />
+          ) : (
+            <IoIosMore size={_700 ? 28 : 20} />
+          )}
         </Stack>
 
     </Stack>
