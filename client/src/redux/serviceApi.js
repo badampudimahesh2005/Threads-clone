@@ -6,12 +6,14 @@ import {
   addUser,
   deleteThePost,
 } from "./serviceSlice";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
 
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5000/api/',
+    baseUrl: `${backendUrl}`,
     credentials: "include",
   }),
 
