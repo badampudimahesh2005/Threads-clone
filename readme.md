@@ -77,7 +77,7 @@ JWT_SECRET =  jwt secret key
     ![User Profile](/client/public/screenshots/profile.png)  
 
     ### Post Creation  
-    ![Post Creation](/client/public/screenshots/profile.png)  
+    ![Post Creation](/client/public/screenshots/writePost.png)  
 
     ### Dark Mode
     ![Dark Mode](/client//public/screenshots/dark.png)
