@@ -79,5 +79,8 @@ JWT_SECRET =  jwt secret key
     ### Post Creation  
     ![Post Creation](/client/public/screenshots/profile.png)  
 
+    ### Dark Mode
+    ![Dark Mode](/client//public/screenshots/dark.png)
+
 ## Contact  
 For any inquiries or contributions, feel free to reach out at [maheshbadampudi31@gmail.com].  
